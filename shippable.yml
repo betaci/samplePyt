@@ -4,15 +4,34 @@ language: python
 
 # Version number
 python:
-  - 2.6
-  - 2.7
-  - 3.2
-  - 3.3
+  #- 2.6
+  #- 2.7
+  #- 3.2
+  #- 3.3
   - 3.4
-  - 3.5
-  - pypy
-  - pypy3
+  #- 3.5
+  #- pypy
+  #- pypy3
 
 build:
+  pre_ci:
+    - docker build -t=shiphitchcock1/samplepyt .
+
+  pre_ci_boot:  
+      image_name: shiphitchcock1/samplepyt
+      image_tag: latest
+      #image_name: drydock/u12nod
+      #image_tag: prod
+      pull: false
+      options: '--privileged=true --net=bridge -e FOO=true -e BOO=false'
+
   ci:
-    - python --version
+    - python --version  
+
+  post_ci:
+    - docker push shiphitchcock1/samplepyt
+    
+integrations:
+  hub:
+    - integrationName: shiphitchcock1-hub
+      type: docker
